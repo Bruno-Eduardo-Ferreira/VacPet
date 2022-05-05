@@ -4,5 +4,5 @@ O objetivo desse aplicativo é auxiliar clínicas veterinárias, na notificaçã
  </p>
  <div><img src= https://user-images.githubusercontent.com/102911080/166852109-6f0a9287-7903-4d75-b032-c16196badaeb.png /></div>
  <p><br> Documentos do projeto: <br> </p>
- <div>Sumário Executivo: (https://github.com/Bruno-Eduardo-Ferreira/Fast-Parking/files/8500048/Sumario.Executivo.docx)</div>
- <div>Cronograma: (https://github.com/Bruno-Eduardo-Ferreira/Fast-Parking/files/8500089/Cronograma.xlsx)</div>
+ <div>Sumário Executivo: (https://github.com/Bruno-Eduardo-Ferreira/VacPet/files/8628292/Sumario.Executivo.Mobile.docx)</div>
+ <div>Cronograma: (https://github.com/Bruno-Eduardo-Ferreira/VacPet/files/8628290/Cronograma.xlsx)</div>
