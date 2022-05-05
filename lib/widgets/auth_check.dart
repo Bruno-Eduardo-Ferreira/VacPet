@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vacpet/presentation/pages/home/home_page.dart';
 import 'package:vacpet/presentation/pages/login/login_page.dart';
-import 'package:vacpet/services/auth_service.dart';
+import 'package:vacpet/services/auth_service.dart' ;
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({Key? key}) : super(key: key);
