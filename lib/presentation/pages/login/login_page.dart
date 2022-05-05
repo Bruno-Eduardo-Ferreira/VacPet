@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vacpet/services/auth_service.dart';
@@ -49,7 +48,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 18.0),
-            child: Image.asset('assets/images/logo.png'),
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 150,
+              height: 100,
+            ),
           ),
           SingleChildScrollView(
             child: Form(

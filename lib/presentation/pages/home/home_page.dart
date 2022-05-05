@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: EdgeInsets.only(top: 109.0),
               child: Text(
-                "Home",
+                "Home Vacpet",
                 style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
               ),
             ),
