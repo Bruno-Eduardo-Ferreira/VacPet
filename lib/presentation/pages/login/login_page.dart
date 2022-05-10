@@ -35,95 +35,100 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 55.0),
-              child: Text(
-                "Login",
-                style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          reverse: true,
+          child: Column(
+            children: [
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 50.0),
+                  child: Text(
+                    "Login",
+                    style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 18.0),
-            child: Image.asset(
-              'assets/images/logo.png',
-              width: 150,
-              height: 100,
-            ),
-          ),
-          SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: TextFormField(
-                        controller: email,
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 200,
+                  height: 150,
+                ),
+              ),
+              Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: TextFormField(
+                          controller: email,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Email',
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Informe algum email!';
+                            }
+                            return 'Informe o email corretamente!';
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: TextFormField(
+                        controller: senha,
+                        obscureText: true,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Email',
+                          labelText: 'Senha',
                         ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Informe o email corretamente!';
+                            return 'Informe sua senha!';
+                          } else if (value.length < 6) {
+                            return 'Sua senha deve ter no mínimo 6 caracteres';
                           }
                           return null;
-                        }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: TextFormField(
-                      controller: senha,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Senha',
+                        },
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Informe sua senha!';
-                        } else if (value.length < 6) {
-                          return 'Sua senha deve ter no mínimo 6 caracteres';
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          login();
-                        }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(Icons.check),
-                          Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Text(
-                              'Logar',
-                              style: TextStyle(fontSize: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            login();
+                          }else{
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.check),
+                            Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Text(
+                                'Logar',
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
