@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.fromLTRB(24,6,24,6),
                       child: TextFormField(
                           controller: email,
                           decoration: const InputDecoration(
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                           }),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.fromLTRB(24,6,24,6),
                       child: TextFormField(
                         controller: senha,
                         obscureText: true,

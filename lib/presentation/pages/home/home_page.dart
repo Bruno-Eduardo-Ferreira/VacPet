@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text(
-                                  'Cadastro',
+                                  'Cadastrar cliente',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                           onPressed: () {
                               auth.logout();
+                              
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
