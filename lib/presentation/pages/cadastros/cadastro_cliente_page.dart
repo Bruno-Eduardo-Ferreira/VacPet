@@ -19,7 +19,11 @@ class _CadastroClienteState extends State<CadastroCliente> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _addCliente(
-      String nome, String cpf, String celular, String endereco) async {
+    String nome,
+    String cpf,
+    String celular,
+    String endereco,
+  ) async {
     await _firestore.collection('clientes').add({
       'nome': nome,
       'cpf': cpf,
@@ -46,7 +50,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                 child: Padding(
                   padding: EdgeInsets.only(top: 50.0, bottom: 50.0),
                   child: Text(
-                    'Cadastrar Cliente',
+                    'Cliente',
                     style:
                         TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
                   ),
@@ -69,9 +73,9 @@ class _CadastroClienteState extends State<CadastroCliente> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Informe algum nome!';
-                            }else if(value.length > 80){
-                            return 'São permitidos no máximo 80 caracteres para o nome!';
-                          }
+                            } else if (value.length > 80) {
+                              return 'São permitidos no máximo 80 caracteres para o nome!';
+                            }
                             nomeDigitado = value;
                             return null;
                           }),
@@ -88,7 +92,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Informe algum cpf!';
-                          }else if(value.length != 14){
+                          } else if (value.length != 14) {
                             return 'Verifique a quantidade de números informados!';
                           }
                           cpfDigitado = value;
@@ -108,7 +112,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Informe algum número de celular!';
-                          }else if(value.length != 11){
+                          } else if (value.length != 11) {
                             return 'Verifique a quantidade de números informados!';
                           }
                           celularDigitado = value;
@@ -145,9 +149,14 @@ class _CadastroClienteState extends State<CadastroCliente> {
                                 cpfDigitado != null &&
                                 celularDigitado != null &&
                                 enderecoDigitado != null) {
-                              await _addCliente(nomeDigitado!, cpfDigitado!,
-                                  celularDigitado!, enderecoDigitado!);
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));   
+                              await _addCliente(
+                                nomeDigitado!,
+                                cpfDigitado!,
+                                celularDigitado!,
+                                enderecoDigitado!,
+                              );
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
                             }
                           } else {
                             FocusManager.instance.primaryFocus?.unfocus();
