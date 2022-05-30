@@ -12,7 +12,6 @@ class CadastroPet extends StatefulWidget {
 
 class _CadastroPetState extends State<CadastroPet> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final nome = TextEditingController();
   final nomePet = TextEditingController();
   final idadePet = TextEditingController();
   final sexoPet = TextEditingController();
@@ -21,7 +20,18 @@ class _CadastroPetState extends State<CadastroPet> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> _addPet(String nome, String nomePet, String idadePet,
+  Future<void> _addPet(String nomePet, String idadePet,
+      String sexoPet, String pesoPet, String racaPet) async {
+    await _firestore.collection('clientes').doc(idUser).collection('pets').add({
+      'nomePet': nomePet,
+      'idade': idadePet,
+      'sexo': sexoPet,
+      'peso': pesoPet,
+      'raca': racaPet,
+    });
+  }
+
+  /*Future<void> _addPet(String nome, String nomePet, String idadePet,
       String sexoPet, String pesoPet, String racaPet) async {
     await _firestore.collection('pets').add({
       'dono': nome,
@@ -31,9 +41,9 @@ class _CadastroPetState extends State<CadastroPet> {
       'peso': pesoPet,
       'raca': racaPet,
     });
-  }
+  }*/
 
-  String? nomeDigitado;
+
   String? nomePetDigitado;
   String? idadePetDigitado;
   String? sexoPetDigitado;
@@ -42,35 +52,36 @@ class _CadastroPetState extends State<CadastroPet> {
 
   final selectSexo = ['M', 'F'];
 
-  String? selectInitialSexo;
-  String? teste;
+  String? selectSexoPet;
+  String? selectDono;
+  String? idUser;
 
   final clientesCadastrados = [];
 
-  /*void _getUsers() async {
+  void _getUserID(String user) async {
     var colletion = FirebaseFirestore.instance.collection('clientes');
     var result = await colletion.get();
     for (var doc in result.docs) {
-      clientesCadastrados.add(doc['nome']);
-      setState(() {
-        clientesCadastrados;
-      });
+      if (doc['nome'] == user) {
+        idUser = doc.id;
+        print(idUser);
+      }
     }
-  }*/
+  }
 
   @override
   void initState() {
-
     void _getUsers() async {
-    var colletion = FirebaseFirestore.instance.collection('clientes');
-    var result = await colletion.get();
-    for (var doc in result.docs) {
-      clientesCadastrados.add(doc['nome']);
-      setState(() {
-        clientesCadastrados;
-      });
+      var colletion = FirebaseFirestore.instance.collection('clientes');
+      var result = await colletion.get();
+      for (var doc in result.docs) {
+        clientesCadastrados.add(doc['nome']);
+        setState(() {
+          clientesCadastrados;
+        });
+      }
     }
-  }
+
     _getUsers();
     super.initState();
   }
@@ -110,7 +121,7 @@ class _CadastroPetState extends State<CadastroPet> {
                             ),
                             DropdownButton(
                               hint: const Text("Seleciona o dono do pet"),
-                              value: teste ?? null,
+                              value: selectDono,
                               items: clientesCadastrados.map((username) {
                                 return DropdownMenuItem(
                                     value: username,
@@ -120,10 +131,10 @@ class _CadastroPetState extends State<CadastroPet> {
                                     ));
                               }).toList(),
                               onChanged: (valuename) {
-                                nomeDigitado = valuename as String;
                                 setState(() {
-                                  teste = valuename;
+                                  selectDono = valuename as String;
                                 });
+                                _getUserID(selectDono!);
                               },
                             ),
                           ],
@@ -131,7 +142,7 @@ class _CadastroPetState extends State<CadastroPet> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
-                          controller: nome,
+                          controller: nomePet,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Nome do pet',
@@ -175,8 +186,8 @@ class _CadastroPetState extends State<CadastroPet> {
                               style: TextStyle(fontSize: 16),
                             ),
                             DropdownButton(
-                              hint: Text('Selecione o sexo do pet'),
-                              value: selectInitialSexo ?? null,
+                              hint: const Text('Selecione o sexo do pet'),
+                              value: selectSexoPet,
                               items: selectSexo.map((itemsname) {
                                 return DropdownMenuItem(
                                     value: itemsname,
@@ -188,7 +199,7 @@ class _CadastroPetState extends State<CadastroPet> {
                               onChanged: (value) {
                                 sexoPetDigitado = value as String;
                                 setState(() {
-                                  selectInitialSexo = value;
+                                  selectSexoPet = value;
                                 });
                               },
                             ),
@@ -237,14 +248,14 @@ class _CadastroPetState extends State<CadastroPet> {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState?.save();
 
-                            if (nomeDigitado != null &&
+                            if (
                                 nomePetDigitado != null &&
                                 idadePetDigitado != null &&
                                 sexoPetDigitado != null &&
                                 pesoPetDigitado != null &&
                                 racaPetDigitado != null) {
+
                               await _addPet(
-                                  nomeDigitado!,
                                   nomePetDigitado!,
                                   idadePetDigitado!,
                                   sexoPetDigitado!,
