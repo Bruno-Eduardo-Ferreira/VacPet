@@ -1,4 +1,5 @@
 import 'package:vacpet/presentation/pages/cadastros/cadastro_pet_page.dart';
+import 'package:vacpet/presentation/pages/cadastros/cadastro_vacina_page.dart';
 import 'package:vacpet/presentation/pages/consultas/consulta_cliente_page.dart';
 import 'package:vacpet/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,28 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.all(16),
                       child: Text(
                         'Cadastrar pet',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const CadastroVacina()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.check),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Cadastrar vacina',
                         style: TextStyle(fontSize: 20),
                       ),
                     ),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:vacpet/presentation/pages/home/home_page.dart';
 
@@ -12,6 +11,7 @@ class CadastroPet extends StatefulWidget {
 
 class _CadastroPetState extends State<CadastroPet> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final nomeDono = TextEditingController();
   final nomePet = TextEditingController();
   final idadePet = TextEditingController();
   final sexoPet = TextEditingController();
@@ -20,9 +20,10 @@ class _CadastroPetState extends State<CadastroPet> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> _addPet(String nomePet, String idadePet,
+  Future<void> _addPet(String nomeDono, String nomePet, String idadePet,
       String sexoPet, String pesoPet, String racaPet) async {
     await _firestore.collection('clientes').doc(idUser).collection('pets').add({
+      'nomeDono' : nomeDono,
       'nomePet': nomePet,
       'idade': idadePet,
       'sexo': sexoPet,
@@ -31,19 +32,7 @@ class _CadastroPetState extends State<CadastroPet> {
     });
   }
 
-  /*Future<void> _addPet(String nome, String nomePet, String idadePet,
-      String sexoPet, String pesoPet, String racaPet) async {
-    await _firestore.collection('pets').add({
-      'dono': nome,
-      'nomePet': nomePet,
-      'idade': idadePet,
-      'sexo': sexoPet,
-      'peso': pesoPet,
-      'raca': racaPet,
-    });
-  }*/
-
-
+  String? nomeDonoDigitado;
   String? nomePetDigitado;
   String? idadePetDigitado;
   String? sexoPetDigitado;
@@ -64,7 +53,6 @@ class _CadastroPetState extends State<CadastroPet> {
     for (var doc in result.docs) {
       if (doc['nome'] == user) {
         idUser = doc.id;
-        print(idUser);
       }
     }
   }
@@ -120,7 +108,7 @@ class _CadastroPetState extends State<CadastroPet> {
                               style: TextStyle(fontSize: 16),
                             ),
                             DropdownButton(
-                              hint: const Text("Seleciona o dono do pet"),
+                              hint: const Text("Selecione o dono do pet"),
                               value: selectDono,
                               items: clientesCadastrados.map((username) {
                                 return DropdownMenuItem(
@@ -131,8 +119,9 @@ class _CadastroPetState extends State<CadastroPet> {
                                     ));
                               }).toList(),
                               onChanged: (valuename) {
+                                nomeDonoDigitado = valuename as String;
                                 setState(() {
-                                  selectDono = valuename as String;
+                                  selectDono = valuename;
                                 });
                                 _getUserID(selectDono!);
                               },
@@ -249,6 +238,7 @@ class _CadastroPetState extends State<CadastroPet> {
                             formKey.currentState?.save();
 
                             if (
+                              nomeDonoDigitado != null &&
                                 nomePetDigitado != null &&
                                 idadePetDigitado != null &&
                                 sexoPetDigitado != null &&
@@ -256,6 +246,7 @@ class _CadastroPetState extends State<CadastroPet> {
                                 racaPetDigitado != null) {
 
                               await _addPet(
+                                  nomeDonoDigitado!,
                                   nomePetDigitado!,
                                   idadePetDigitado!,
                                   sexoPetDigitado!,
