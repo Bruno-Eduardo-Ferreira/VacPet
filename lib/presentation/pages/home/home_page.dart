@@ -5,6 +5,7 @@ import 'package:vacpet/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../cadastros/cadastro_cliente_page.dart';
+import '../consultas/consulta_vacinas_a_expirar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -113,6 +114,28 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.all(16),
                       child: Text(
                         'Consultar cliente',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ConsultaVacina()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.check),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Consultar vacinas a notificar',
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
