@@ -21,7 +21,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _addVacina(
-      String nomeVacina, DateTime dataAplicado, DateTime dataVencimento) async {
+      String nomeVacina, DateTime dataAplicado, DateTime dataVencimento, String idUser) async {
     await _firestore
         .collection('clientes')
         .doc(idUser)
@@ -29,6 +29,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
         .doc(idPet)
         .collection('vacinas')
         .add({
+      'idUser' : idUser,
       'nomeVacina': nomeVacina,
       'dataAplicado': dataAplicado,
       'dataVencimento': dataVencimento,
@@ -285,11 +286,12 @@ class _CadastroVacinaState extends State<CadastroVacina> {
 
                             if (nomeVacinaDigitado != null &&
                                 dataVacAplicado != null &&
-                                dataVacVencimento != null) {
+                                dataVacVencimento != null &&
+                                idUser != null) {
                               await _addVacina(
                                   nomeVacinaDigitado!,
                                   dataVacAplicado!,
-                                  dataVacVencimento!);
+                                  dataVacVencimento!, idUser!);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const HomePage()));
                             }
