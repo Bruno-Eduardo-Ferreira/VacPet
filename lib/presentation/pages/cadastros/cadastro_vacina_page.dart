@@ -20,8 +20,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> _addVacina(
-      String nomeVacina, DateTime dataAplicado, DateTime dataVencimento, String idUser) async {
+  Future<void> _addVacina(String nomeVacina, DateTime dataAplicado,
+      DateTime dataVencimento, String idUser) async {
     await _firestore
         .collection('clientes')
         .doc(idUser)
@@ -29,7 +29,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
         .doc(idPet)
         .collection('vacinas')
         .add({
-      'idUser' : idUser,
+      'idUser': idUser,
       'nomeVacina': nomeVacina,
       'dataAplicado': dataAplicado,
       'dataVencimento': dataVencimento,
@@ -49,7 +49,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
   String? selectTempo;
   String? idUser;
   String? idPet;
-  bool? teste;
+  bool? flagTempo;
 
   final clientesCadastrados = [];
   final petsCadastrados = [];
@@ -78,6 +78,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
   void _getPets(String pet) async {
     var colletion = FirebaseFirestore.instance.collectionGroup('pets');
     var result = await colletion.get();
+    selectPet = null;
+    petsCadastrados.clear();
     for (var doc in result.docs) {
       if (doc['nomeDono'] == pet) {
         petsCadastrados.add(doc['nomePet']);
@@ -100,6 +102,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
         });
       }
     }
+
     _getUsers();
     super.initState();
     initializeDateFormatting();
@@ -107,7 +110,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
 
   @override
   Widget build(BuildContext context) {
-     dataPtVacAplicado =
+    dataPtVacAplicado =
         DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br').format(dataAtual!);
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
@@ -132,7 +135,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                        padding: const EdgeInsets.fromLTRB(34, 6, 24, 6),
+                        padding: const EdgeInsets.fromLTRB(44, 6, 24, 6),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -162,7 +165,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           ],
                         )),
                     Padding(
-                        padding: const EdgeInsets.fromLTRB(34, 6, 24, 6),
+                        padding: const EdgeInsets.fromLTRB(44, 6, 24, 6),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -191,7 +194,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           ],
                         )),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                       child: TextFormField(
                           controller: nomeVacina,
                           decoration: const InputDecoration(
@@ -210,39 +213,44 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           }),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 18, 24, 6),
-                      child: Text('Data de aplicação: $dataPtVacAplicado.'),
+                      padding: const EdgeInsets.fromLTRB(0, 12, 24, 12),
+                      child: Text('Data de aplicação: $dataPtVacAplicado.', style: const TextStyle(fontSize: 16)),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(34, 18, 24, 6),
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Text('Informe o tempo:   '),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 24),
+                            child: Text('Informe o tempo:   '),
+                          ),
                           DropdownButton(
-                                    hint: const Text('Selecione o tempo'),
-                                    value: selectTempo,
-                                    items: tempo.map((itemsname) {
-                                      return DropdownMenuItem(
-                                          value: itemsname,
-                                          child: Text(
-                                            itemsname,
-                                            style: const TextStyle(fontSize: 20),
-                                          ));
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      selectTempo = value as String;
-                                      selectTempo == 'Dia' ? teste = true : teste = false;
-                                      setState(() {
-                                        selectTempo = value;
-                                      });
-                                    },
-                                  ),
+                            hint: const Text('Selecione o tempo'),
+                            value: selectTempo,
+                            items: tempo.map((itemsname) {
+                              return DropdownMenuItem(
+                                  value: itemsname,
+                                  child: Text(
+                                    itemsname,
+                                    style: const TextStyle(fontSize: 20),
+                                  ));
+                            }).toList(),
+                            onChanged: (value) {
+                              selectTempo = value as String;
+                              selectTempo == 'Dia'
+                                  ? flagTempo = true
+                                  : flagTempo = false;
+                              setState(() {
+                                selectTempo = value;
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 18, 31, 6),
+                      padding: const EdgeInsets.fromLTRB(24, 12, 31, 12),
                       child: TextFormField(
                         controller: dias,
                         decoration: const InputDecoration(
@@ -254,11 +262,11 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           if (value!.isEmpty) {
                             return 'Informe quantos dias!';
                           }
-                          if(teste == true){
+                          if (flagTempo == true) {
                             tempoDigitado = num.parse(value);
-                          }else if (teste == false){
+                          } else if (flagTempo == false) {
                             tempoDigitado = num.parse(value) * 30;
-                          }else{
+                          } else {
                             return 'Informe o tempo no campo superior!';
                           }
                           dataVacVencimento = dataAtual!
@@ -266,19 +274,47 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           dataPtVacVencimento =
                               DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
                                   .format(dataVacVencimento!);
-                                  setState(() {
-                                    dataPtVacVencimento;
-                                  });
                           return null;
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 18, 24, 6),
-                      child: dataPtVacVencimento != null ? Text('Data de vencimento: $dataPtVacVencimento.') : const Text('Sem data de vencimento.'),
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                      child: dataPtVacVencimento != null
+                          ? Text('Data de vencimento: $dataPtVacVencimento.', style: const TextStyle(fontSize: 16))
+                          : const Text('Sem data de vencimento.'),
+                    ),
+                     Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            formKey.currentState?.save();
+                            setState(() {
+                              dataPtVacVencimento;
+                            });
+
+                          } else {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.check),
+                            Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Text(
+                                'Verificar data',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                       child: ElevatedButton(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
@@ -291,7 +327,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                               await _addVacina(
                                   nomeVacinaDigitado!,
                                   dataVacAplicado!,
-                                  dataVacVencimento!, idUser!);
+                                  dataVacVencimento!,
+                                  idUser!);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const HomePage()));
                             }
