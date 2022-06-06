@@ -21,7 +21,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _addVacina(String nomeVacina, DateTime dataAplicado,
-      DateTime dataVencimento, String idUser) async {
+      DateTime dataVencimento, String idUser, nomePetAplicado) async {
     await _firestore
         .collection('clientes')
         .doc(idUser)
@@ -33,6 +33,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
       'nomeVacina': nomeVacina,
       'dataAplicado': dataAplicado,
       'dataVencimento': dataVencimento,
+      'nomePet': nomePetAplicado,
     });
   }
 
@@ -214,7 +215,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 12, 24, 12),
-                      child: Text('Data de aplicação: $dataPtVacAplicado.', style: const TextStyle(fontSize: 16)),
+                      child: Text('Data de aplicação: $dataPtVacAplicado.',
+                          style: const TextStyle(fontSize: 16)),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
@@ -281,10 +283,11 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                       child: dataPtVacVencimento != null
-                          ? Text('Data de vencimento: $dataPtVacVencimento.', style: const TextStyle(fontSize: 16))
+                          ? Text('Data de vencimento: $dataPtVacVencimento.',
+                              style: const TextStyle(fontSize: 16))
                           : const Text('Sem data de vencimento.'),
                     ),
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
                       child: ElevatedButton(
                         onPressed: () async {
@@ -293,7 +296,6 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                             setState(() {
                               dataPtVacVencimento;
                             });
-
                           } else {
                             FocusManager.instance.primaryFocus?.unfocus();
                           }
@@ -320,7 +322,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState?.save();
 
-                            if (nomeVacinaDigitado != null &&
+                            if (selectPet != null &&
+                                nomeVacinaDigitado != null &&
                                 dataVacAplicado != null &&
                                 dataVacVencimento != null &&
                                 idUser != null) {
@@ -328,7 +331,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                                   nomeVacinaDigitado!,
                                   dataVacAplicado!,
                                   dataVacVencimento!,
-                                  idUser!);
+                                  idUser!,
+                                  selectPet!);
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const HomePage()));
                             }

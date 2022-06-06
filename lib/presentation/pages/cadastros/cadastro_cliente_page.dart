@@ -112,7 +112,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Informe algum número de celular!';
-                          } else if (value.length != 11) {
+                          } else if (value.length != 12) {
                             return 'Verifique a quantidade de números informados!';
                           }
                           celularDigitado = value;
