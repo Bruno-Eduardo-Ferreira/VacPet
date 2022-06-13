@@ -23,7 +23,7 @@ class _CadastroPetState extends State<CadastroPet> {
   Future<void> _addPet(String nomeDono, String nomePet, String idadePet,
       String sexoPet, String pesoPet, String racaPet) async {
     await _firestore.collection('clientes').doc(idUser).collection('pets').add({
-      'nomeDono' : nomeDono,
+      'nomeDono': nomeDono,
       'nomePet': nomePet,
       'idade': idadePet,
       'sexo': sexoPet,
@@ -39,11 +39,14 @@ class _CadastroPetState extends State<CadastroPet> {
   String? pesoPetDigitado;
   String? racaPetDigitado;
 
-  final selectSexo = ['M', 'F'];
+  final selectSexo = ['F', 'M'];
+  final selectTempoIdade = ['Ano', 'Mês'];
 
-  String? selectSexoPet;
+  String? selectedSexoPet;
+  String? selectedTempoIdade;
   String? selectDono;
   String? idUser;
+  bool? flagTempo;
 
   final clientesCadastrados = [];
 
@@ -148,6 +151,36 @@ class _CadastroPetState extends State<CadastroPet> {
                           }),
                     ),
                     Padding(
+                      padding: const EdgeInsets.fromLTRB(34, 6, 24, 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Sexo do pet:    ',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          DropdownButton(
+                            hint: const Text('Selecione o tempo'),
+                            value: selectedTempoIdade,
+                            items: selectTempoIdade.map((itemsname) {
+                              return DropdownMenuItem(
+                                  value: itemsname,
+                                  child: Text(
+                                    itemsname,
+                                    style: const TextStyle(fontSize: 24),
+                                  ));
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedTempoIdade = value as String?;
+                                flagTempo = true;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
                         controller: idadePet,
@@ -159,55 +192,69 @@ class _CadastroPetState extends State<CadastroPet> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Informe alguma idade!';
+                          } else if (flagTempo != true){
+                            return 'Selecione o tempo no campo superior!';
                           }
-                          idadePetDigitado = value;
+                          if(value != '1'){
+                            idadePetDigitado = value;
+                            if(selectedTempoIdade == 'Mês'){
+                              selectedTempoIdade = 'Meses';
+                              idadePetDigitado = idadePetDigitado! + ' ' + selectedTempoIdade!;
+                            }else {
+                              idadePetDigitado = idadePetDigitado! + ' ' + selectedTempoIdade! + 's';
+                            }
+                          } else{
+                            idadePetDigitado = value;
+                            idadePetDigitado = idadePetDigitado! + ' ' + selectedTempoIdade!;
+                          }
                           return null;
                         },
                       ),
                     ),
                     Padding(
-                        padding: const EdgeInsets.fromLTRB(34, 6, 24, 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Sexo do pet:    ',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            DropdownButton(
-                              hint: const Text('Selecione o sexo do pet'),
-                              value: selectSexoPet,
-                              items: selectSexo.map((itemsname) {
-                                return DropdownMenuItem(
-                                    value: itemsname,
-                                    child: Text(
-                                      itemsname,
-                                      style: const TextStyle(fontSize: 24),
-                                    ));
-                              }).toList(),
-                              onChanged: (value) {
-                                sexoPetDigitado = value as String;
-                                setState(() {
-                                  selectSexoPet = value;
-                                });
-                              },
-                            ),
-                          ],
-                        )),
+                      padding: const EdgeInsets.fromLTRB(34, 6, 24, 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Sexo do pet:    ',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          DropdownButton(
+                            hint: const Text('Selecione o sexo do pet'),
+                            value: selectedSexoPet,
+                            items: selectSexo.map((itemsname) {
+                              return DropdownMenuItem(
+                                  value: itemsname,
+                                  child: Text(
+                                    itemsname,
+                                    style: const TextStyle(fontSize: 24),
+                                  ));
+                            }).toList(),
+                            onChanged: (value) {
+                              sexoPetDigitado = value as String;
+                              setState(() {
+                                selectedSexoPet = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
                         controller: pesoPet,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Peso do pet',
+                          labelText: 'Peso do pet em kg',
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Informe algum peso!';
                           }
-                          pesoPetDigitado = value;
+                          pesoPetDigitado = value + ' Kg';
                           return null;
                         },
                       ),
@@ -237,14 +284,12 @@ class _CadastroPetState extends State<CadastroPet> {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState?.save();
 
-                            if (
-                              nomeDonoDigitado != null &&
+                            if (nomeDonoDigitado != null &&
                                 nomePetDigitado != null &&
                                 idadePetDigitado != null &&
                                 sexoPetDigitado != null &&
                                 pesoPetDigitado != null &&
                                 racaPetDigitado != null) {
-
                               await _addPet(
                                   nomeDonoDigitado!,
                                   nomePetDigitado!,
