@@ -25,6 +25,11 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     return _firestore.collectionGroup('vacinas').snapshots();
   }
 
+  Future _getVac(String id) async {
+    var collection = await FirebaseFirestore.instance.collectionGroup('vacinas');
+    
+  }
+
   DateTime dataAtual = DateTime.now();
   DateTime? dataNotificacao;
   String? dataPtExibir;
@@ -32,6 +37,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   String? nome;
   final celularPorCard = [];
   int count = 0;
+
 
   @override
   void initState() {
@@ -109,7 +115,8 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                                       doc['nomeVacina'],
                                       doc['idUser'],
                                       doc['nomeVacina'],
-                                      doc['nomePet']),
+                                      doc['nomePet'],
+                                      doc.id),
                                 ),
                               );
                             }
@@ -121,7 +128,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     );
   }
 
-  Widget cardVac(String doc, String idUser, String nomeVacina, String nomePet) {
+  Widget cardVac(String doc, String idUser, String nomeVacina, String nomePet, String idVac) {
     return Column(
       children: [
         GestureDetector(
@@ -144,7 +151,46 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                         fontSize: 16.0, height: 2, fontWeight: FontWeight.w600)),
                 trailing: const Icon(Icons.whatsapp_outlined),
               ),
-            ),  
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: ElevatedButton(
+                onPressed: () {
+                showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Atenção!'),
+          content: const Text('Você tem certeza que essa notificação foi enviada?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, 'OK');
+              } ,
+              child: const Text('Sim'),
+            ),
+          ],
+        ),
+      );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.check),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Finalizar notificação',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
       ],
     );
   }
