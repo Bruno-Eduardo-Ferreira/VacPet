@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:vacpet/presentation/pages/home/home_page.dart';
 
 class CadastroCliente extends StatefulWidget {
@@ -15,6 +16,8 @@ class _CadastroClienteState extends State<CadastroCliente> {
   final cpf = TextEditingController();
   final celular = TextEditingController();
   final endereco = TextEditingController();
+  final maskCpf = MaskTextInputFormatter(mask: "###.###.###.##", type: MaskAutoCompletionType.eager);
+  final maskCel = MaskTextInputFormatter(mask: "(##) #####-####", type: MaskAutoCompletionType.eager);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -34,7 +37,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
 
   String? nomeDigitado;
   String? cpfDigitado;
-  String? celularDigitado;
+  String? celularDigitado = '+';
   String? enderecoDigitado;
 
   @override
@@ -83,6 +86,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
+                        inputFormatters: [maskCpf],
                         controller: cpf,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -103,6 +107,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
+                        inputFormatters: [maskCel],
                         controller: celular,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -112,10 +117,10 @@ class _CadastroClienteState extends State<CadastroCliente> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Informe algum número de celular!';
-                          } else if (value.length != 12) {
+                          } else if (value.length != 15) {
                             return 'Verifique a quantidade de números informados!';
                           }
-                          celularDigitado = value;
+                          celularDigitado = celularDigitado! + value;
                           return null;
                         },
                       ),
