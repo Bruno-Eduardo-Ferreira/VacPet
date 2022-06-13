@@ -123,242 +123,235 @@ class _CadastroVacinaState extends State<CadastroVacina> {
           reverse: true,
           child: Column(
             children: [
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 50.0, bottom: 50.0),
-                  child: Text(
-                    'Vacina',
-                    style:
-                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              Form(
-                key: formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(44, 6, 24, 6),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(44, 6, 24, 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Dono do pet:    ',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              DropdownButton(
+                                hint: const Text("Selecione o dono do pet"),
+                                value: selectDono,
+                                items: clientesCadastrados.map((username) {
+                                  return DropdownMenuItem(
+                                      value: username,
+                                      child: Text(
+                                        username,
+                                        style: const TextStyle(fontSize: 24),
+                                      ));
+                                }).toList(),
+                                onChanged: (valuename) {
+                                  setState(() {
+                                    selectDono = valuename as String;
+                                  });
+                                  _getUserID(selectDono!);
+                                  _getPets(selectDono!);
+                                },
+                              ),
+                            ],
+                          )),
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(44, 6, 24, 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Pet:    ',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              DropdownButton(
+                                hint: const Text("Selecione o pet"),
+                                value: selectPet,
+                                items: petsCadastrados.map((petname) {
+                                  return DropdownMenuItem(
+                                      value: petname,
+                                      child: Text(
+                                        petname,
+                                        style: const TextStyle(fontSize: 24),
+                                      ));
+                                }).toList(),
+                                onChanged: (valuename) {
+                                  setState(() {
+                                    selectPet = valuename as String;
+                                  });
+                                  _getPetID(selectPet!, selectDono!);
+                                },
+                              ),
+                            ],
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                        child: TextFormField(
+                            controller: nomeVacina,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Nome da vacina',
+                            ),
+                            keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Informe algum nome!';
+                              } else if (value.length > 80) {
+                                return 'São permitidos no máximo 80 caracteres para o nome!';
+                              }
+                              nomeVacinaDigitado = value;
+                              return null;
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 12, 24, 12),
+                        child: Text('Data de aplicação: $dataPtVacAplicado.',
+                            style: const TextStyle(fontSize: 16)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Dono do pet:    ',
-                              style: TextStyle(fontSize: 16),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 24),
+                              child: Text('Informe o tempo:   '),
                             ),
                             DropdownButton(
-                              hint: const Text("Selecione o dono do pet"),
-                              value: selectDono,
-                              items: clientesCadastrados.map((username) {
+                              hint: const Text('Selecione o tempo'),
+                              value: selectTempo,
+                              items: tempo.map((itemsname) {
                                 return DropdownMenuItem(
-                                    value: username,
+                                    value: itemsname,
                                     child: Text(
-                                      username,
-                                      style: const TextStyle(fontSize: 24),
+                                      itemsname,
+                                      style: const TextStyle(fontSize: 20),
                                     ));
                               }).toList(),
-                              onChanged: (valuename) {
+                              onChanged: (value) {
+                                selectTempo = value as String;
+                                selectTempo == 'Dia'
+                                    ? flagTempo = true
+                                    : flagTempo = false;
                                 setState(() {
-                                  selectDono = valuename as String;
+                                  selectTempo = value;
                                 });
-                                _getUserID(selectDono!);
-                                _getPets(selectDono!);
                               },
                             ),
                           ],
-                        )),
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(44, 6, 24, 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Pet:    ',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            DropdownButton(
-                              hint: const Text("Selecione o pet"),
-                              value: selectPet,
-                              items: petsCadastrados.map((petname) {
-                                return DropdownMenuItem(
-                                    value: petname,
-                                    child: Text(
-                                      petname,
-                                      style: const TextStyle(fontSize: 24),
-                                    ));
-                              }).toList(),
-                              onChanged: (valuename) {
-                                setState(() {
-                                  selectPet = valuename as String;
-                                });
-                                _getPetID(selectPet!, selectDono!);
-                              },
-                            ),
-                          ],
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                      child: TextFormField(
-                          controller: nomeVacina,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 12, 31, 12),
+                        child: TextFormField(
+                          controller: dias,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'Nome da vacina',
+                            labelText: 'Informe quanto tempo',
                           ),
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Informe algum nome!';
-                            } else if (value.length > 80) {
-                              return 'São permitidos no máximo 80 caracteres para o nome!';
+                              return 'Informe quantos dias!';
                             }
-                            nomeVacinaDigitado = value;
+                            if (flagTempo == true) {
+                              tempoDigitado = num.parse(value);
+                            } else if (flagTempo == false) {
+                              tempoDigitado = num.parse(value) * 30;
+                            } else {
+                              return 'Informe o tempo no campo superior!';
+                            }
+                            dataVacVencimento = dataAtual!
+                                .add(Duration(days: tempoDigitado as int));
+                            dataPtVacVencimento =
+                                DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
+                                    .format(dataVacVencimento!);
                             return null;
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 12, 24, 12),
-                      child: Text('Data de aplicação: $dataPtVacAplicado.',
-                          style: const TextStyle(fontSize: 16)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 24),
-                            child: Text('Informe o tempo:   '),
-                          ),
-                          DropdownButton(
-                            hint: const Text('Selecione o tempo'),
-                            value: selectTempo,
-                            items: tempo.map((itemsname) {
-                              return DropdownMenuItem(
-                                  value: itemsname,
-                                  child: Text(
-                                    itemsname,
-                                    style: const TextStyle(fontSize: 20),
-                                  ));
-                            }).toList(),
-                            onChanged: (value) {
-                              selectTempo = value as String;
-                              selectTempo == 'Dia'
-                                  ? flagTempo = true
-                                  : flagTempo = false;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                        child: dataPtVacVencimento != null
+                            ? Text('Data de vencimento: $dataPtVacVencimento.',
+                                style: const TextStyle(fontSize: 16))
+                            : const Text('Sem data de vencimento.'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState?.save();
                               setState(() {
-                                selectTempo = value;
+                                dataPtVacVencimento;
                               });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 12, 31, 12),
-                      child: TextFormField(
-                        controller: dias,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Informe quanto tempo',
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe quantos dias!';
-                          }
-                          if (flagTempo == true) {
-                            tempoDigitado = num.parse(value);
-                          } else if (flagTempo == false) {
-                            tempoDigitado = num.parse(value) * 30;
-                          } else {
-                            return 'Informe o tempo no campo superior!';
-                          }
-                          dataVacVencimento = dataAtual!
-                              .add(Duration(days: tempoDigitado as int));
-                          dataPtVacVencimento =
-                              DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
-                                  .format(dataVacVencimento!);
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                      child: dataPtVacVencimento != null
-                          ? Text('Data de vencimento: $dataPtVacVencimento.',
-                              style: const TextStyle(fontSize: 16))
-                          : const Text('Sem data de vencimento.'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            formKey.currentState?.save();
-                            setState(() {
-                              dataPtVacVencimento;
-                            });
-                          } else {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          }
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.check),
-                            Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                'Verificar data',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            formKey.currentState?.save();
-
-                            if (selectPet != null &&
-                                nomeVacinaDigitado != null &&
-                                dataVacAplicado != null &&
-                                dataVacVencimento != null &&
-                                idUser != null) {
-                              await _addVacina(
-                                  nomeVacinaDigitado!,
-                                  dataVacAplicado!,
-                                  dataVacVencimento!,
-                                  idUser!,
-                                  selectPet!);
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
+                            } else {
+                              FocusManager.instance.primaryFocus?.unfocus();
                             }
-                          } else {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          }
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.check),
-                            Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                'Cadastrar',
-                                style: TextStyle(fontSize: 20),
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.check),
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  'Verificar data',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState?.save();
+
+                              if (selectPet != null &&
+                                  nomeVacinaDigitado != null &&
+                                  dataVacAplicado != null &&
+                                  dataVacVencimento != null &&
+                                  idUser != null) {
+                                await _addVacina(
+                                    nomeVacinaDigitado!,
+                                    dataVacAplicado!,
+                                    dataVacVencimento!,
+                                    idUser!,
+                                    selectPet!);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                              }
+                            } else {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.check),
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  'Cadastrar',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],

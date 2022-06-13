@@ -52,140 +52,133 @@ class _CadastroClienteState extends State<CadastroCliente> {
           reverse: true,
           child: Column(
             children: [
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 50.0, bottom: 50.0),
-                  child: Text(
-                    'Cliente',
-                    style:
-                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              Form(
-                key: formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
-                      child: TextFormField(
-                          controller: nome,
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                        child: TextFormField(
+                            controller: nome,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Nome',
+                            ),
+                            keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Informe algum nome!';
+                              } else if (value.length > 80) {
+                                return 'São permitidos no máximo 80 caracteres para o nome!';
+                              }
+                              nomeDigitado = value;
+                              return null;
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                        child: TextFormField(
+                          inputFormatters: [maskCpf],
+                          controller: cpf,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'Nome',
+                            labelText: 'CPF',
                           ),
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Informe algum nome!';
-                            } else if (value.length > 80) {
-                              return 'São permitidos no máximo 80 caracteres para o nome!';
+                              return 'Informe algum cpf!';
+                            } else if (value.length != 14) {
+                              return 'Verifique a quantidade de números informados!';
                             }
-                            nomeDigitado = value;
+                            cpfDigitado = value;
                             return null;
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
-                      child: TextFormField(
-                        inputFormatters: [maskCpf],
-                        controller: cpf,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'CPF',
+                          },
                         ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe algum cpf!';
-                          } else if (value.length != 14) {
-                            return 'Verifique a quantidade de números informados!';
-                          }
-                          cpfDigitado = value;
-                          return null;
-                        },
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
-                      child: TextFormField(
-                        inputFormatters: [maskCel],
-                        controller: celular,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Número do celular',
-                        ),
-                        keyboardType: TextInputType.phone,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe algum número de celular!';
-                          } else if (value.length != 15) {
-                            return 'Verifique a quantidade de números informados!';
-                          }
-                          celularDigitado = celularDigitado! + value;
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
-                      child: TextFormField(
-                        controller: endereco,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Endereço',
-                        ),
-                        keyboardType: TextInputType.text,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe algum endereço!';
-                          }
-                          enderecoDigitado = value;
-                          return null;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            formKey.currentState?.save();
-
-                            if (nomeDigitado != null &&
-                                cpfDigitado != null &&
-                                celularDigitado != null &&
-                                enderecoDigitado != null) {
-                              await _addCliente(
-                                nomeDigitado!,
-                                cpfDigitado!,
-                                celularDigitado!,
-                                enderecoDigitado!,
-                              );
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                        child: TextFormField(
+                          inputFormatters: [maskCel],
+                          controller: celular,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Número do celular',
+                          ),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Informe algum número de celular!';
+                            } else if (value.length != 15) {
+                              return 'Verifique a quantidade de números informados!';
                             }
-                          } else {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          }
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.check),
-                            Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                'Cadastrar',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
-                          ],
+                            celularDigitado = celularDigitado! + value;
+                            return null;
+                          },
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
+                        child: TextFormField(
+                          controller: endereco,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Endereço',
+                          ),
+                          keyboardType: TextInputType.text,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Informe algum endereço!';
+                            }
+                            enderecoDigitado = value;
+                            return null;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState?.save();
+
+                              if (nomeDigitado != null &&
+                                  cpfDigitado != null &&
+                                  celularDigitado != null &&
+                                  enderecoDigitado != null) {
+                                await _addCliente(
+                                  nomeDigitado!,
+                                  cpfDigitado!,
+                                  celularDigitado!,
+                                  enderecoDigitado!,
+                                );
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                              }
+                            } else {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.check),
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  'Cadastrar',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],
