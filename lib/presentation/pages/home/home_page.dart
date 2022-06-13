@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  AuthService auth = new AuthService();
+  AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {

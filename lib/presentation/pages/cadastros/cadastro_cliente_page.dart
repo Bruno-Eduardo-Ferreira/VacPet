@@ -43,6 +43,9 @@ class _CadastroClienteState extends State<CadastroCliente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cadastro de clientes'),
+      ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
         child: SingleChildScrollView(
