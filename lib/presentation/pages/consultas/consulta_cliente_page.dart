@@ -18,6 +18,9 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Consulta de clientes'),
+      ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(

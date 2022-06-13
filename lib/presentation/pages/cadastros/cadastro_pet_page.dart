@@ -80,6 +80,9 @@ class _CadastroPetState extends State<CadastroPet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cadastro de pets'),
+      ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
         child: SingleChildScrollView(

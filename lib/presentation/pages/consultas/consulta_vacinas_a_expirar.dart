@@ -55,6 +55,9 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Consulta de vacinas'),
+      ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(

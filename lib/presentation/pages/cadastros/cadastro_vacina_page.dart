@@ -114,6 +114,9 @@ class _CadastroVacinaState extends State<CadastroVacina> {
     dataPtVacAplicado =
         DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br').format(dataAtual!);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cadastro de vacinas'),
+      ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
         child: SingleChildScrollView(
