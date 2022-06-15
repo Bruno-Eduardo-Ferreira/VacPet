@@ -25,6 +25,12 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     return _firestore.collectionGroup('vacinas').snapshots();
   }
 
+  Future _finishNotify(String idVac, String idUser, String idPet) async {
+    var collection = await FirebaseFirestore.instance.collection('clientes').doc(idUser).collection('pets').doc(idPet).collection('vacinas').doc(idVac).update({
+      'status':'done',
+    });
+  }
+
   DateTime dataAtual = DateTime.now();
   DateTime? dataNotificacao;
   String? dataPtExibir;
@@ -32,6 +38,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   String? nome;
   final celularPorCard = [];
   int count = 0;
+
 
   @override
   void initState() {
@@ -92,7 +99,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                                 DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
                                     .format(dataNotificacao!);
                             if (dataNotificacao!.difference(dataAtual).inDays <
-                                7) {
+                                7 && doc['status'] == 'await') {
                               return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(28, 12, 28, 12),
@@ -106,10 +113,11 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                                     color: Colors.white,
                                   ),
                                   child: cardVac(
-                                      doc['nomeVacina'],
                                       doc['idUser'],
                                       doc['nomeVacina'],
-                                      doc['nomePet']),
+                                      doc['nomePet'],
+                                      doc['idPet'],
+                                      doc.id),
                                 ),
                               );
                             }
@@ -121,7 +129,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     );
   }
 
-  Widget cardVac(String doc, String idUser, String nomeVacina, String nomePet) {
+  Widget cardVac(String idUser, String nomeVacina, String nomePet, String idPet, String idVac) {
     return Column(
       children: [
         GestureDetector(
@@ -136,7 +144,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
               },
               child: ListTile(
                 title: Text(
-                  doc,
+                  nomeVacina,
                   style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text('Venc.: $dataPtExibir.',
@@ -144,8 +152,48 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                         fontSize: 16.0, height: 2, fontWeight: FontWeight.w600)),
                 trailing: const Icon(Icons.whatsapp_outlined),
               ),
-            ),  
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: ElevatedButton(
+                onPressed: () {
+                showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Atenção!'),
+          content: const Text('Você tem certeza que essa notificação foi enviada?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () {
+                _finishNotify(idVac, idUser, idPet);
+                Navigator.pop(context, 'OK');
+              } ,
+              child: const Text('Sim'),
+            ),
+          ],
+        ),
+      );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.check),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Finalizar notificação',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
       ],
     );
   }
-}
+  }
