@@ -25,9 +25,10 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     return _firestore.collectionGroup('vacinas').snapshots();
   }
 
-  Future _getVac(String id) async {
-    var collection = await FirebaseFirestore.instance.collectionGroup('vacinas');
-    
+  Future _finishNotify(String idVac, String idUser, String idPet) async {
+    var collection = await FirebaseFirestore.instance.collection('clientes').doc(idUser).collection('pets').doc(idPet).collection('vacinas').doc(idVac).update({
+      'status':'done',
+    });
   }
 
   DateTime dataAtual = DateTime.now();
@@ -98,7 +99,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                                 DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
                                     .format(dataNotificacao!);
                             if (dataNotificacao!.difference(dataAtual).inDays <
-                                7) {
+                                7 && doc['status'] == 'await') {
                               return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(28, 12, 28, 12),
@@ -112,10 +113,10 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                                     color: Colors.white,
                                   ),
                                   child: cardVac(
-                                      doc['nomeVacina'],
                                       doc['idUser'],
                                       doc['nomeVacina'],
                                       doc['nomePet'],
+                                      doc['idPet'],
                                       doc.id),
                                 ),
                               );
@@ -128,7 +129,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     );
   }
 
-  Widget cardVac(String doc, String idUser, String nomeVacina, String nomePet, String idVac) {
+  Widget cardVac(String idUser, String nomeVacina, String nomePet, String idPet, String idVac) {
     return Column(
       children: [
         GestureDetector(
@@ -143,7 +144,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
               },
               child: ListTile(
                 title: Text(
-                  doc,
+                  nomeVacina,
                   style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text('Venc.: $dataPtExibir.',
@@ -168,6 +169,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
             ),
             TextButton(
               onPressed: () {
+                _finishNotify(idVac, idUser, idPet);
                 Navigator.pop(context, 'OK');
               } ,
               child: const Text('Sim'),
@@ -194,4 +196,4 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
       ],
     );
   }
-}
+  }
