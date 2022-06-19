@@ -41,21 +41,22 @@ class _LoginPageState extends State<LoginPage> {
           reverse: true,
           child: Column(
             children: [
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 50.0),
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
+                padding: const EdgeInsets.only(top: 50.0, bottom: 30.0),
                 child: Image.asset(
                   'assets/images/logo.png',
                   width: 200,
                   height: 150,
+                ),
+              ),
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 30.0),
+                  child: Text(
+                    "Login",
+                    style:
+                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
               Form(
@@ -64,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24,6,24,6),
+                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
                           controller: email,
                           decoration: const InputDecoration(
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                           }),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24,6,24,6),
+                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                       child: TextFormField(
                         controller: senha,
                         obscureText: true,
@@ -105,14 +106,14 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             login();
-                          }else{
-                          FocusManager.instance.primaryFocus?.unfocus();
+                          } else {
+                            FocusManager.instance.primaryFocus?.unfocus();
                           }
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Icon(Icons.check),
+                            Icon(Icons.login_rounded),
                             Padding(
                               padding: EdgeInsets.all(16),
                               child: Text(

@@ -16,8 +16,10 @@ class _CadastroClienteState extends State<CadastroCliente> {
   final cpf = TextEditingController();
   final celular = TextEditingController();
   final endereco = TextEditingController();
-  final maskCpf = MaskTextInputFormatter(mask: "###.###.###.##", type: MaskAutoCompletionType.eager);
-  final maskCel = MaskTextInputFormatter(mask: "(##) #####-####", type: MaskAutoCompletionType.eager);
+  final maskCpf = MaskTextInputFormatter(
+      mask: "###.###.###.##", type: MaskAutoCompletionType.eager);
+  final maskCel = MaskTextInputFormatter(
+      mask: "(##) #####-####", type: MaskAutoCompletionType.eager);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -44,7 +46,23 @@ class _CadastroClienteState extends State<CadastroCliente> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro de clientes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Cadastro de clientes',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Hero(
+              tag: 'logo',
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 60,
+                height: 40,
+              ),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
@@ -165,11 +183,11 @@ class _CadastroClienteState extends State<CadastroCliente> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Icon(Icons.check),
+                              Icon(Icons.add_box_outlined),
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text(
-                                  'Cadastrar',
+                                  'Cadastrar cliente',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
