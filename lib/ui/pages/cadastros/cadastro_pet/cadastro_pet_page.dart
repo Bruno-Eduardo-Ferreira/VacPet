@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vacpet/presentation/pages/home/home_page.dart';
+import 'package:vacpet/ui/pages/home/home_page.dart';
 
 class CadastroPet extends StatefulWidget {
   const CadastroPet({Key? key}) : super(key: key);

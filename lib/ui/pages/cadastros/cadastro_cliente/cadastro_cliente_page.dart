@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:vacpet/presentation/pages/home/home_page.dart';
+import 'package:vacpet/ui/pages/home/home_page.dart';
 
 class CadastroCliente extends StatefulWidget {
   const CadastroCliente({Key? key}) : super(key: key);
