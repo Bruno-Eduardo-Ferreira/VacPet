@@ -139,7 +139,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                             ),
                           );
                         }
-                        return const Text('');
+                        return const SizedBox();
                       });
               }
             }),
@@ -169,7 +169,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
             subtitle: Text('Venc.: $dataPtExibir.',
                 style: const TextStyle(
                     fontSize: 16.0, height: 2, fontWeight: FontWeight.w600)),
-            trailing: const Icon(Icons.whatsapp_outlined),
+            trailing: const Icon(Icons.whatsapp_rounded),
           ),
         ),
         Padding(
@@ -179,20 +179,28 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
               showDialog<String>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
-                  title: const Text('Atenção!'),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                    Center(child: Text('Atenção!', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.red),),),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Icon(Icons.warning_amber_outlined, color: Colors.red, size: 40,),
+                    )
+                  ],),
                   content: const Text(
-                      'Você tem certeza que essa notificação foi enviada?'),
+                      'Você tem certeza que essa notificação foi enviada?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: const Text('Não'),
+                      child: const Text('Não', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                     ),
                     TextButton(
                       onPressed: () {
                         _finishNotify(idVac, idUser, idPet);
                         Navigator.pop(context, 'OK');
                       },
-                      child: const Text('Sim'),
+                      child: const Text('Sim', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                     ),
                   ],
                 ),
@@ -201,7 +209,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(Icons.check),
+                Icon(Icons.notifications_off_outlined),
                 Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
