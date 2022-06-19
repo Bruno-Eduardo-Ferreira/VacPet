@@ -44,7 +44,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro de clientes'),
+        title: const Text('Cadastro de clientes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
