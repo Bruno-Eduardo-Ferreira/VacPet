@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vacpet/ui/pages/home/home_page.dart';
+// ignore: avoid_relative_lib_imports
+import '../../../../../../presentation/lib/pages/cadastros/cadastro_pet/cadastro_pet_presenter.dart';
+import '../../home/home_page.dart';
 
 class CadastroPet extends StatefulWidget {
   const CadastroPet({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class CadastroPet extends StatefulWidget {
 }
 
 class _CadastroPetState extends State<CadastroPet> {
+  final ICadastroPet presenter = ICadastroPet();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final nomeDono = TextEditingController();
   final nomePet = TextEditingController();
@@ -17,20 +19,6 @@ class _CadastroPetState extends State<CadastroPet> {
   final sexoPet = TextEditingController();
   final pesoPet = TextEditingController();
   final racaPet = TextEditingController();
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> _addPet(String nomeDono, String nomePet, String idadePet,
-      String sexoPet, String pesoPet, String racaPet) async {
-    await _firestore.collection('clientes').doc(idUser).collection('pets').add({
-      'nomeDono': nomeDono,
-      'nomePet': nomePet,
-      'idade': idadePet,
-      'sexo': sexoPet,
-      'peso': pesoPet,
-      'raca': racaPet,
-    });
-  }
 
   String? nomeDonoDigitado;
   String? nomePetDigitado;
@@ -48,32 +36,15 @@ class _CadastroPetState extends State<CadastroPet> {
   String? idUser;
   bool? flagTempo;
 
-  final clientesCadastrados = [];
-
-  void _getUserID(String user) async {
-    var colletion = FirebaseFirestore.instance.collection('clientes');
-    var result = await colletion.get();
-    for (var doc in result.docs) {
-      if (doc['nome'] == user) {
-        idUser = doc.id;
-      }
-    }
+  void attDono() {
+    setState(() {
+      presenter.clientesCadastrados;
+    });
   }
 
   @override
   void initState() {
-    void _getUsers() async {
-      var colletion = FirebaseFirestore.instance.collection('clientes');
-      var result = await colletion.get();
-      for (var doc in result.docs) {
-        clientesCadastrados.add(doc['nome']);
-        setState(() {
-          clientesCadastrados;
-        });
-      }
-    }
-
-    _getUsers();
+    presenter.getUsers(attDono);
     super.initState();
   }
 
@@ -124,7 +95,8 @@ class _CadastroPetState extends State<CadastroPet> {
                               DropdownButton(
                                 hint: const Text("Selecione o dono do pet"),
                                 value: selectDono,
-                                items: clientesCadastrados.map((username) {
+                                items: presenter.clientesCadastrados
+                                    .map((username) {
                                   return DropdownMenuItem(
                                       value: username,
                                       child: Text(
@@ -137,7 +109,7 @@ class _CadastroPetState extends State<CadastroPet> {
                                   setState(() {
                                     selectDono = valuename;
                                   });
-                                  _getUserID(selectDono!);
+                                  presenter.getUserId(selectDono!);
                                 },
                               ),
                             ],
@@ -307,13 +279,14 @@ class _CadastroPetState extends State<CadastroPet> {
                                   sexoPetDigitado != null &&
                                   pesoPetDigitado != null &&
                                   racaPetDigitado != null) {
-                                await _addPet(
+                                await presenter.addPet(
                                     nomeDonoDigitado!,
                                     nomePetDigitado!,
                                     idadePetDigitado!,
                                     sexoPetDigitado!,
                                     pesoPetDigitado!,
-                                    racaPetDigitado!);
+                                    racaPetDigitado!,
+                                    presenter.idUser);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => const HomePage()));
                               }

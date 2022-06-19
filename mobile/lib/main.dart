@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:vacpet/services/auth_service.dart';
 import 'meu_aplicativo.dart';
+import 'services/auth_service.dart';
 
 void main() async {
    WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +15,6 @@ void main() async {
       child: const MyApp(),
     ),
   );
- 
+
 }
 

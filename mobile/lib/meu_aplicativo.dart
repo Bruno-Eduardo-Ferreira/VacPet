@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:vacpet/widgets/auth_check.dart';
+import 'widgets/auth_check.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

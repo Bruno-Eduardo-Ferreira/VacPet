@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:vacpet/ui/pages/home/home_page.dart';
+import '../../home/home_page.dart';
 
 class CadastroVacina extends StatefulWidget {
   const CadastroVacina({Key? key}) : super(key: key);

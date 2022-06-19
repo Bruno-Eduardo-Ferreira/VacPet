@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:vacpet/ui/pages/home/home_page.dart';
+// ignore: avoid_relative_lib_imports
+import '../../../../../../presentation/lib/pages/cadastros/cadastro_cliente/cadastro_cliente_presenter.dart';
+import '../../home/home_page.dart';
 
 class CadastroCliente extends StatefulWidget {
   const CadastroCliente({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class CadastroCliente extends StatefulWidget {
 }
 
 class _CadastroClienteState extends State<CadastroCliente> {
+  final ICadastroCliente presenter = ICadastroCliente();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final nome = TextEditingController();
   final cpf = TextEditingController();
@@ -20,22 +22,6 @@ class _CadastroClienteState extends State<CadastroCliente> {
       mask: "###.###.###.##", type: MaskAutoCompletionType.eager);
   final maskCel = MaskTextInputFormatter(
       mask: "(##) #####-####", type: MaskAutoCompletionType.eager);
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> _addCliente(
-    String nome,
-    String cpf,
-    String celular,
-    String endereco,
-  ) async {
-    await _firestore.collection('clientes').add({
-      'nome': nome,
-      'cpf': cpf,
-      'celular': celular,
-      'endereço': endereco,
-    });
-  }
 
   String? nomeDigitado;
   String? cpfDigitado;
@@ -167,7 +153,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                                   cpfDigitado != null &&
                                   celularDigitado != null &&
                                   enderecoDigitado != null) {
-                                await _addCliente(
+                                await presenter.addCliente(
                                   nomeDigitado!,
                                   cpfDigitado!,
                                   celularDigitado!,
