@@ -16,7 +16,8 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
   }
 
   Future _deleteUser(String idUser) async {
-    var collection = FirebaseFirestore.instance.collection('clientes').doc(idUser).delete();
+    var collection =
+        FirebaseFirestore.instance.collection('clientes').doc(idUser).delete();
   }
 
   @override
@@ -72,15 +73,17 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(28, 12, 28, 12),
                           child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 0.5, color: Colors.blue.shade200),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(6.0)),
-                                color: Colors.white,
-                              ),
-                              child: cardCliente(doc.id, doc['nome'], doc['celular']),),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 0.5, color: Colors.blue.shade200),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6.0)),
+                              color: Colors.white,
+                            ),
+                            child: cardCliente(
+                                doc.id, doc['nome'], doc['celular']),
+                          ),
                         );
                       });
               }
@@ -167,9 +170,11 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
                 )
               ],
             ),
-            subtitle: Text('Celular: $celular',
-                style: const TextStyle(
-                    fontSize: 15.0, height: 2, fontWeight: FontWeight.w600),),
+            subtitle: Text(
+              'Celular: $celular',
+              style: const TextStyle(
+                  fontSize: 15.0, height: 2, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
       ],
