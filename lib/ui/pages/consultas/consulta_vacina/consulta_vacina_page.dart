@@ -18,6 +18,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
     final url = 'whatsapp://send?phone=$number&text=$message';
     final uri = Uri.parse('whatsapp://send?phone=$number&text=$message');
 
+    // ignore: deprecated_member_use, avoid_print
     await canLaunchUrl(uri) ? launch(url) : print("não abriu o wpp");
   }
 
@@ -26,8 +27,16 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   }
 
   Future _finishNotify(String idVac, String idUser, String idPet) async {
-    var collection = await FirebaseFirestore.instance.collection('clientes').doc(idUser).collection('pets').doc(idPet).collection('vacinas').doc(idVac).update({
-      'status':'done',
+    // ignore: unused_local_variable
+    var collection = await FirebaseFirestore.instance
+        .collection('clientes')
+        .doc(idUser)
+        .collection('pets')
+        .doc(idPet)
+        .collection('vacinas')
+        .doc(idVac)
+        .update({
+      'status': 'done',
     });
   }
 
@@ -38,7 +47,6 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   String? nome;
   final celularPorCard = [];
   int count = 0;
-
 
   @override
   void initState() {
@@ -63,137 +71,149 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Consulta de vacinas'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Consulta de vacinas',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Hero(
+              tag: 'logo',
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 60,
+                height: 40,
+              ),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: StreamBuilder<QuerySnapshot>(
-                stream: _getList(),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
+        padding: const EdgeInsets.only(top: 40),
+        child: StreamBuilder<QuerySnapshot>(
+            stream: _getList(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
 
-                    case ConnectionState.waiting:
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
 
-                    case ConnectionState.active:
+                case ConnectionState.active:
 
-                    case ConnectionState.done:
-                      if (snapshot.data!.docs.isEmpty) {
-                        return const Center(
-                          child: Text(
-                              'Não possui vacinas para notificar vencimento.'),
-                        );
-                      }
-                      return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            final DocumentSnapshot doc =
-                                snapshot.data!.docs[index];
-                            dataNotificacao = doc['dataVencimento'].toDate();
-                            dataPtExibir =
-                                DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
-                                    .format(dataNotificacao!);
-                            if (dataNotificacao!.difference(dataAtual).inDays <
-                                7 && doc['status'] == 'await') {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(28, 12, 28, 12),
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.5, color: Colors.blue.shade200),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(6.0)),
-                                    color: Colors.white,
-                                  ),
-                                  child: cardVac(
-                                      doc['idUser'],
-                                      doc['nomeVacina'],
-                                      doc['nomePet'],
-                                      doc['idPet'],
-                                      doc.id),
-                                ),
-                              );
-                            }
-                            return const Text('');
-                          });
+                case ConnectionState.done:
+                  if (snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child:
+                          Text('Não possui vacinas para notificar vencimento.'),
+                    );
                   }
-                }),
-          )),
+                  return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final DocumentSnapshot doc = snapshot.data!.docs[index];
+                        dataNotificacao = doc['dataVencimento'].toDate();
+                        dataPtExibir =
+                            DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
+                                .format(dataNotificacao!);
+                        if (dataNotificacao!.difference(dataAtual).inDays < 7 &&
+                            doc['status'] == 'await') {
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(28, 12, 28, 12),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5, color: Colors.blue.shade200),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(6.0)),
+                                color: Colors.white,
+                              ),
+                              child: cardVac(doc['idUser'], doc['nomeVacina'],
+                                  doc['nomePet'], doc['idPet'], doc.id),
+                            ),
+                          );
+                        }
+                        return const Text('');
+                      });
+              }
+            }),
+      )),
     );
   }
 
-  Widget cardVac(String idUser, String nomeVacina, String nomePet, String idPet, String idVac) {
+  Widget cardVac(String idUser, String nomeVacina, String nomePet, String idPet,
+      String idVac) {
     return Column(
       children: [
         GestureDetector(
-              onTap: () async {
-                await 
-                _getCelular(idUser);
-                lauchWpp(
-                      number: celularnotificacao,
-                      message:
-                          "Olá $nome, a vacina: $nomeVacina, do seu pet: $nomePet, está para vencer na data de: $dataPtExibir");
-                  count++;
-              },
-              child: ListTile(
-                title: Text(
-                  nomeVacina,
-                  style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                ),
-                subtitle: Text('Venc.: $dataPtExibir.',
-                    style: const TextStyle(
-                        fontSize: 16.0, height: 2, fontWeight: FontWeight.w600)),
-                trailing: const Icon(Icons.whatsapp_outlined),
-              ),
+          onTap: () async {
+            await _getCelular(idUser);
+            lauchWpp(
+                number: celularnotificacao,
+                message:
+                    "Olá $nome, a vacina: $nomeVacina, do seu pet: $nomePet, está para vencer na data de: $dataPtExibir");
+            count++;
+          },
+          child: ListTile(
+            title: Text(
+              nomeVacina,
+              style:
+                  const TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: ElevatedButton(
-                onPressed: () {
-                showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Atenção!'),
-          content: const Text('Você tem certeza que essa notificação foi enviada?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: const Text('Não'),
-            ),
-            TextButton(
-              onPressed: () {
-                _finishNotify(idVac, idUser, idPet);
-                Navigator.pop(context, 'OK');
-              } ,
-              child: const Text('Sim'),
-            ),
-          ],
+            subtitle: Text('Venc.: $dataPtExibir.',
+                style: const TextStyle(
+                    fontSize: 16.0, height: 2, fontWeight: FontWeight.w600)),
+            trailing: const Icon(Icons.whatsapp_outlined),
+          ),
         ),
-      );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.check),
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        'Finalizar notificação',
-                        style: TextStyle(fontSize: 20),
-                      ),
+        Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: ElevatedButton(
+            onPressed: () {
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Atenção!'),
+                  content: const Text(
+                      'Você tem certeza que essa notificação foi enviada?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Não'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _finishNotify(idVac, idUser, idPet);
+                        Navigator.pop(context, 'OK');
+                      },
+                      child: const Text('Sim'),
                     ),
                   ],
                 ),
-              ),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.check),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Finalizar notificação',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
             ),
+          ),
+        ),
       ],
     );
   }
-  }
+}

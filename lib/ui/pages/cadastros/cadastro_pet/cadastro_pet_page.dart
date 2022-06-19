@@ -81,7 +81,23 @@ class _CadastroPetState extends State<CadastroPet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro de pets', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Cadastro de pets',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Hero(
+              tag: 'logo',
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 60,
+                height: 40,
+              ),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
@@ -151,7 +167,7 @@ class _CadastroPetState extends State<CadastroPet> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Text(
-                              'Sexo do pet:    ',
+                              'Informe o tempo:    ',
                               style: TextStyle(fontSize: 16),
                             ),
                             DropdownButton(
@@ -187,20 +203,26 @@ class _CadastroPetState extends State<CadastroPet> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Informe alguma idade!';
-                            } else if (flagTempo != true){
+                            } else if (flagTempo != true) {
                               return 'Selecione o tempo no campo superior!';
                             }
-                            if(value != '1'){
+                            if (value != '1') {
                               idadePetDigitado = value;
-                              if(selectedTempoIdade == 'Mês'){
+                              if (selectedTempoIdade == 'Mês') {
                                 selectedTempoIdade = 'Meses';
-                                idadePetDigitado = idadePetDigitado! + ' ' + selectedTempoIdade!;
-                              }else {
-                                idadePetDigitado = idadePetDigitado! + ' ' + selectedTempoIdade! + 's';
+                                idadePetDigitado = idadePetDigitado! +
+                                    ' ' +
+                                    selectedTempoIdade!;
+                              } else {
+                                idadePetDigitado = idadePetDigitado! +
+                                    ' ' +
+                                    selectedTempoIdade! +
+                                    's';
                               }
-                            } else{
+                            } else {
                               idadePetDigitado = value;
-                              idadePetDigitado = idadePetDigitado! + ' ' + selectedTempoIdade!;
+                              idadePetDigitado =
+                                  idadePetDigitado! + ' ' + selectedTempoIdade!;
                             }
                             return null;
                           },
@@ -302,11 +324,11 @@ class _CadastroPetState extends State<CadastroPet> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Icon(Icons.check),
+                              Icon(Icons.add_box_outlined),
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text(
-                                  'Cadastrar',
+                                  'Cadastrar pet',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),

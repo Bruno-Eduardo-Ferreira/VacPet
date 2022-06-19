@@ -20,8 +20,13 @@ class _CadastroVacinaState extends State<CadastroVacina> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> _addVacina(String nomeVacina, DateTime dataAplicado,
-      DateTime dataVencimento, String idUser, String idPetAdd, nomePetAplicado) async {
+  Future<void> _addVacina(
+      String nomeVacina,
+      DateTime dataAplicado,
+      DateTime dataVencimento,
+      String idUser,
+      String idPetAdd,
+      nomePetAplicado) async {
     await _firestore
         .collection('clientes')
         .doc(idUser)
@@ -30,7 +35,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
         .collection('vacinas')
         .add({
       'idUser': idUser,
-      'idPet' : idPetAdd,
+      'idPet': idPetAdd,
       'nomeVacina': nomeVacina,
       'dataAplicado': dataAplicado,
       'dataVencimento': dataVencimento,
@@ -117,7 +122,23 @@ class _CadastroVacinaState extends State<CadastroVacina> {
         DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br').format(dataAtual!);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro de vacinas', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Cadastro de vacinas',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Hero(
+              tag: 'logo',
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 60,
+                height: 40,
+              ),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
@@ -300,7 +321,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Icon(Icons.check),
+                              Icon(Icons.calendar_month_outlined),
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text(
@@ -329,7 +350,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                                     nomeVacinaDigitado!,
                                     dataVacAplicado!,
                                     dataVacVencimento!,
-                                    idUser!, idPet!,
+                                    idUser!,
+                                    idPet!,
                                     selectPet!);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => const HomePage()));
@@ -341,11 +363,11 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              Icon(Icons.check),
+                              Icon(Icons.add_box_outlined),
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text(
-                                  'Cadastrar',
+                                  'Cadastrar vacina',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
