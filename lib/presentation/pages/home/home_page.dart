@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               AnimatedContainer(
-                duration: const Duration(milliseconds: 600),
+                duration: const Duration(milliseconds:500),
                 height: cadastro ? 320 : 0,
                 curve: Curves.easeInOut,
                 child: Padding(
@@ -192,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               AnimatedContainer(
-                duration: const Duration(milliseconds: 700),
+                duration: const Duration(milliseconds: 500),
                 height: consulta ? 210 : 0,
                 curve: Curves.easeInOut,
                 child: Padding(
@@ -280,7 +280,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void startTimer(int flag) {
-    const oneSec = Duration(milliseconds: 700);
+    const oneSec = Duration(milliseconds: 500);
     Timer(
       oneSec,
       () {
