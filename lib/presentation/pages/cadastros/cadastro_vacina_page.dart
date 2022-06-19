@@ -117,7 +117,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
         DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br').format(dataAtual!);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro de vacinas'),
+        title: const Text('Cadastro de vacinas', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(

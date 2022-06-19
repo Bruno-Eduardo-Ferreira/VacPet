@@ -81,7 +81,7 @@ class _CadastroPetState extends State<CadastroPet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cadastro de pets'),
+        title: const Text('Cadastro de pets', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
       ),
       backgroundColor: Colors.blue.shade50,
       body: SafeArea(
