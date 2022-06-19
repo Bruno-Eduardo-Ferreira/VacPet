@@ -16,6 +16,7 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
   }
 
   Future _deleteUser(String idUser) async {
+    // ignore: unused_local_variable
     var collection =
         FirebaseFirestore.instance.collection('clientes').doc(idUser).delete();
   }
