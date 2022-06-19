@@ -169,7 +169,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
             subtitle: Text('Venc.: $dataPtExibir.',
                 style: const TextStyle(
                     fontSize: 16.0, height: 2, fontWeight: FontWeight.w600)),
-            trailing: const Icon(Icons.whatsapp_rounded),
+            trailing: Icon(Icons.whatsapp_rounded, color: Colors.green.shade500,),
           ),
         ),
         Padding(
