@@ -306,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                                 Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Text(
-                                    'Notificar vencimento de vacinas',
+                                    'Notificar vencimento de vacina',
                                     style: TextStyle(fontSize: 15),
                                   ),
                                 ),
