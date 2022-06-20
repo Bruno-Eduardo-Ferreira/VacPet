@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'get_consulta_vacina_presenter.dart';
+import 'get_consulta_notificacao_presenter.dart';
 
 abstract class IConsultaVacina {
   factory IConsultaVacina() => GetConsultaVacina();

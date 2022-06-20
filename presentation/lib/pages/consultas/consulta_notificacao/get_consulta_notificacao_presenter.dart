@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'consulta_vacina_presenter.dart';
+import 'consulta_notificacao_presenter.dart';
 
 class GetConsultaVacina implements IConsultaVacina {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

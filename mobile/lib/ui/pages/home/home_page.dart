@@ -5,7 +5,7 @@ import '../cadastros/cadastro_cliente/cadastro_cliente_page.dart';
 import '../cadastros/cadastro_pet/cadastro_pet_page.dart';
 import '../cadastros/cadastro_vacina/cadastro_vacina_page.dart';
 import '../consultas/consulta_cliente/consulta_cliente_page.dart';
-import '../consultas/consulta_vacina/consulta_vacina_page.dart';
+import '../consultas/consulta_notificacao/consulta_notificacao_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

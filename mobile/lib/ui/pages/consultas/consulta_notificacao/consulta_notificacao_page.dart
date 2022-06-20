@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 // ignore: avoid_relative_lib_imports
-import '../../../../../../presentation/lib/pages/consultas/consulta_vacina/consulta_vacina_presenter.dart';
+import '../../../../../../presentation/lib/pages/consultas/consulta_notificacao/consulta_notificacao_presenter.dart';
 
 class ConsultaVacina extends StatefulWidget {
   const ConsultaVacina({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Consulta de vacinas',
+              'Notificações pendentes',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
             Hero(
