@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // ignore: avoid_relative_lib_imports
 import '../../../../../../presentation/lib/pages/consultas/consulta_cliente/consulta_cliente_presenter.dart';
+import '../../edicoes/edicao_cliente/edicao_cliente_page.dart';
 
 class ConsultaCliente extends StatefulWidget {
   const ConsultaCliente({Key? key}) : super(key: key);
@@ -89,7 +90,12 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () async {},
+          onTap: () async {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EdicaoCliente(
+                      idUser: idUser,
+                    )));
+          },
           child: ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
