@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+// ignore: avoid_relative_lib_imports
+import '../../../../../../presentation/lib/pages/consultas/consulta_cliente/consulta_cliente_presenter.dart';
 
 class ConsultaCliente extends StatefulWidget {
   const ConsultaCliente({Key? key}) : super(key: key);
@@ -9,17 +11,7 @@ class ConsultaCliente extends StatefulWidget {
 }
 
 class _ConsultaClienteState extends State<ConsultaCliente> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Stream<QuerySnapshot> _getList() {
-    return _firestore.collection('clientes').snapshots();
-  }
-
-  Future _deleteUser(String idUser) async {
-    // ignore: unused_local_variable
-    var collection =
-        FirebaseFirestore.instance.collection('clientes').doc(idUser).delete();
-  }
+  final IConsultaCliente presenter = IConsultaCliente();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +40,7 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
           child: Padding(
         padding: const EdgeInsets.only(top: 40),
         child: StreamBuilder<QuerySnapshot>(
-            stream: _getList(),
+            stream: presenter.getList(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -150,7 +142,7 @@ class _ConsultaClienteState extends State<ConsultaCliente> {
                           ),
                           TextButton(
                             onPressed: () {
-                              _deleteUser(idUser);
+                              presenter.deleteUser(idUser);
                               Navigator.pop(context, 'OK');
                             },
                             child: const Text(

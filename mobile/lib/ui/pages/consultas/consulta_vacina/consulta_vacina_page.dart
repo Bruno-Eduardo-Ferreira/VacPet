@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
+// ignore: avoid_relative_lib_imports
+import '../../../../../../presentation/lib/pages/consultas/consulta_vacina/consulta_vacina_presenter.dart';
 
 class ConsultaVacina extends StatefulWidget {
   const ConsultaVacina({Key? key}) : super(key: key);
@@ -12,39 +13,11 @@ class ConsultaVacina extends StatefulWidget {
 }
 
 class _ConsultaVacinaState extends State<ConsultaVacina> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  void lauchWpp({@required number, @required message}) async {
-    final url = 'whatsapp://send?phone=$number&text=$message';
-    final uri = Uri.parse('whatsapp://send?phone=$number&text=$message');
-
-    // ignore: deprecated_member_use, avoid_print
-    await canLaunchUrl(uri) ? launch(url) : print("não abriu o wpp");
-  }
-
-  Stream<QuerySnapshot> _getList() {
-    return _firestore.collectionGroup('vacinas').snapshots();
-  }
-
-  Future _finishNotify(String idVac, String idUser, String idPet) async {
-    // ignore: unused_local_variable
-    var collection = await FirebaseFirestore.instance
-        .collection('clientes')
-        .doc(idUser)
-        .collection('pets')
-        .doc(idPet)
-        .collection('vacinas')
-        .doc(idVac)
-        .update({
-      'status': 'done',
-    });
-  }
+  final IConsultaVacina presenter = IConsultaVacina();
 
   DateTime dataAtual = DateTime.now();
   DateTime? dataNotificacao;
   String? dataPtExibir;
-  String? celularnotificacao;
-  String? nome;
   final celularPorCard = [];
   int count = 0;
 
@@ -52,19 +25,6 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
   void initState() {
     super.initState();
     initializeDateFormatting();
-  }
-
-  Future<String?> _getCelular(String idUser) async {
-    var colletion = FirebaseFirestore.instance.collection('clientes');
-    var result = await colletion.get();
-    for (var doc in result.docs) {
-      if (doc.id == idUser) {
-        celularnotificacao = doc['celular'];
-        nome = doc['nome'];
-        return celularnotificacao;
-      }
-    }
-    return null;
   }
 
   @override
@@ -94,7 +54,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
           child: Padding(
         padding: const EdgeInsets.only(top: 40),
         child: StreamBuilder<QuerySnapshot>(
-            stream: _getList(),
+            stream: presenter.getList(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
@@ -153,11 +113,11 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
       children: [
         GestureDetector(
           onTap: () async {
-            await _getCelular(idUser);
-            lauchWpp(
-                number: celularnotificacao,
+            await presenter.getCelular(idUser);
+            presenter.lauchWpp(
+                number: presenter.celularNotificacao,
                 message:
-                    "Olá $nome, a vacina: $nomeVacina, do seu pet: $nomePet, está para vencer na data de: $dataPtExibir");
+                    "Olá ${presenter.nome}, a vacina: $nomeVacina, do seu pet: $nomePet, está para vencer na data de: $dataPtExibir");
             count++;
           },
           child: ListTile(
@@ -219,7 +179,7 @@ class _ConsultaVacinaState extends State<ConsultaVacina> {
                     ),
                     TextButton(
                       onPressed: () {
-                        _finishNotify(idVac, idUser, idPet);
+                        presenter.finishNotify(idVac, idUser, idPet);
                         Navigator.pop(context, 'OK');
                       },
                       child: const Text(

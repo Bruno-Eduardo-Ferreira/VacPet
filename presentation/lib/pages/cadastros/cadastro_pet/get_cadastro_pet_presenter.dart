@@ -6,11 +6,15 @@ class GetCadastroPet implements ICadastroPet {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String _idUser = '';
+  @override
   String get idUser => _idUser;
+  @override
   set idUser(String idUser) => _idUser = idUser;
 
   List _clientesCadastrados = [];
+  @override
   List get clientesCadastrados => _clientesCadastrados;
+  @override
   set clientesCadastrados(List clientesCadastrados) =>
       _clientesCadastrados = clientesCadastrados;
 

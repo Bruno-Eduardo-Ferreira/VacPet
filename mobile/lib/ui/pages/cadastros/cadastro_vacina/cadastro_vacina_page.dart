@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+// ignore: avoid_relative_lib_imports
+import '../../../../../../presentation/lib/pages/cadastros/cadastro_vacina/cadastro_vacina_presentar.dart';
 import '../../home/home_page.dart';
 
 class CadastroVacina extends StatefulWidget {
@@ -12,37 +13,12 @@ class CadastroVacina extends StatefulWidget {
 }
 
 class _CadastroVacinaState extends State<CadastroVacina> {
+  final ICadastroVacina presenter = ICadastroVacina();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final nomeVacina = TextEditingController();
   final dataAplicado = TextEditingController();
   final dataVencimento = TextEditingController();
   final dias = TextEditingController();
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<void> _addVacina(
-      String nomeVacina,
-      DateTime dataAplicado,
-      DateTime dataVencimento,
-      String idUser,
-      String idPetAdd,
-      nomePetAplicado) async {
-    await _firestore
-        .collection('clientes')
-        .doc(idUser)
-        .collection('pets')
-        .doc(idPet)
-        .collection('vacinas')
-        .add({
-      'idUser': idUser,
-      'idPet': idPetAdd,
-      'nomeVacina': nomeVacina,
-      'dataAplicado': dataAplicado,
-      'dataVencimento': dataVencimento,
-      'nomePet': nomePetAplicado,
-      'status': 'await',
-    });
-  }
 
   String? nomeVacinaDigitado;
   DateTime? dataVacAplicado = DateTime.now();
@@ -55,63 +31,29 @@ class _CadastroVacinaState extends State<CadastroVacina> {
   String? selectPet;
   String? selectDono;
   String? selectTempo;
-  String? idUser;
-  String? idPet;
   bool? flagTempo;
 
-  final clientesCadastrados = [];
-  final petsCadastrados = [];
   final tempo = ['Dia', 'Mês'];
 
-  void _getUserID(String user) async {
-    var colletion = FirebaseFirestore.instance.collection('clientes');
-    var result = await colletion.get();
-    for (var doc in result.docs) {
-      if (doc['nome'] == user) {
-        idUser = doc.id;
-      }
-    }
+  void attDono() {
+    setState(() {
+      presenter.clientesCadastrados;
+    });
   }
 
-  void _getPetID(String pet, String user) async {
-    var colletion = FirebaseFirestore.instance.collectionGroup('pets');
-    var result = await colletion.get();
-    for (var doc in result.docs) {
-      if (doc['nomePet'] == pet && doc['nomeDono'] == user) {
-        idPet = doc.id;
-      }
-    }
+  void attPet() {
+    setState(() {
+      presenter.petsCadastrados;
+    });
   }
 
-  void _getPets(String pet) async {
-    var colletion = FirebaseFirestore.instance.collectionGroup('pets');
-    var result = await colletion.get();
+  void clearSelectPet(){
     selectPet = null;
-    petsCadastrados.clear();
-    for (var doc in result.docs) {
-      if (doc['nomeDono'] == pet) {
-        petsCadastrados.add(doc['nomePet']);
-        setState(() {
-          petsCadastrados;
-        });
-      }
-    }
   }
 
   @override
   void initState() {
-    void _getUsers() async {
-      var colletion = FirebaseFirestore.instance.collection('clientes');
-      var result = await colletion.get();
-      for (var doc in result.docs) {
-        clientesCadastrados.add(doc['nome']);
-        setState(() {
-          clientesCadastrados;
-        });
-      }
-    }
-
-    _getUsers();
+    presenter.getUsers(attDono);
     super.initState();
     initializeDateFormatting();
   }
@@ -165,7 +107,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                               DropdownButton(
                                 hint: const Text("Selecione o dono do pet"),
                                 value: selectDono,
-                                items: clientesCadastrados.map((username) {
+                                items: presenter.clientesCadastrados
+                                    .map((username) {
                                   return DropdownMenuItem(
                                       value: username,
                                       child: Text(
@@ -177,8 +120,8 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                                   setState(() {
                                     selectDono = valuename as String;
                                   });
-                                  _getUserID(selectDono!);
-                                  _getPets(selectDono!);
+                                  presenter.getUserID(selectDono!);
+                                  presenter.getPets(attPet, clearSelectPet, selectDono!);
                                 },
                               ),
                             ],
@@ -195,7 +138,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                               DropdownButton(
                                 hint: const Text("Selecione o pet"),
                                 value: selectPet,
-                                items: petsCadastrados.map((petname) {
+                                items: presenter.petsCadastrados.map((petname) {
                                   return DropdownMenuItem(
                                       value: petname,
                                       child: Text(
@@ -207,7 +150,7 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                                   setState(() {
                                     selectPet = valuename as String;
                                   });
-                                  _getPetID(selectPet!, selectDono!);
+                                  presenter.getPetID(selectPet!, selectDono!);
                                 },
                               ),
                             ],
@@ -339,19 +282,15 @@ class _CadastroVacinaState extends State<CadastroVacina> {
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
                               formKey.currentState?.save();
-
                               if (selectPet != null &&
                                   nomeVacinaDigitado != null &&
                                   dataVacAplicado != null &&
-                                  dataVacVencimento != null &&
-                                  idUser != null &&
-                                  idPet != null) {
-                                await _addVacina(
+                                  dataVacVencimento != null) {
+                                await presenter.addVacina(
                                     nomeVacinaDigitado!,
                                     dataVacAplicado!,
                                     dataVacVencimento!,
-                                    idUser!,
-                                    idPet!,
+                                    presenter.idUser,
                                     selectPet!);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => const HomePage()));
