@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 // ignore: avoid_relative_lib_imports
-import '../../../../../../presentation/lib/pages/cadastros/cadastro_cliente/cadastro_cliente_presenter.dart';
+import '../../../../../../presentation/lib/pages/edicoes/edicao_cliente/edicao_cliente_presenter.dart';
+import '../../consultas/consulta_cliente/consulta_cliente_page.dart';
 import '../../home/home_page.dart';
 
-class CadastroCliente extends StatefulWidget {
-  const CadastroCliente({Key? key}) : super(key: key);
+class EdicaoCliente extends StatefulWidget {
+  final String idUser;
+  const EdicaoCliente({Key? key, required this.idUser}) : super(key: key);
 
   @override
-  State<CadastroCliente> createState() => _CadastroClienteState();
+  State<EdicaoCliente> createState() => _EdicaoClienteState();
 }
 
-class _CadastroClienteState extends State<CadastroCliente> {
-  final ICadastroCliente presenter = ICadastroCliente();
+class _EdicaoClienteState extends State<EdicaoCliente> {
+  final IEdicaoCliente presenter = IEdicaoCliente();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final nome = TextEditingController();
   final cpf = TextEditingController();
@@ -27,6 +29,24 @@ class _CadastroClienteState extends State<CadastroCliente> {
   String? cpfDigitado;
   String? celularDigitado;
   String? enderecoDigitado;
+  String? teste;
+
+  void dadosExistentes() {
+    setState(() {
+      nome.text = presenter.nome;
+      print(presenter.nome);
+      cpf.text = presenter.cpf;
+      celular.text = presenter.celular;
+      endereco.text = presenter.endereco;
+    });
+  }
+
+  @override
+  void initState() {
+    presenter.getCliente(dadosExistentes, widget.idUser);
+    print(widget.idUser);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +87,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                         padding: const EdgeInsets.fromLTRB(24, 6, 24, 6),
                         child: TextFormField(
                             controller: nome,
+                            initialValue: teste,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Nome',
@@ -153,14 +174,18 @@ class _CadastroClienteState extends State<CadastroCliente> {
                                   cpfDigitado != null &&
                                   celularDigitado != null &&
                                   enderecoDigitado != null) {
-                                await presenter.addCliente(
+                                await presenter.updateCliente(
                                   nomeDigitado!,
                                   cpfDigitado!,
                                   celularDigitado!,
                                   enderecoDigitado!,
+                                  widget.idUser,
                                 );
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const ConsultaCliente()));
                               }
                             } else {
                               FocusManager.instance.primaryFocus?.unfocus();
@@ -173,7 +198,7 @@ class _CadastroClienteState extends State<CadastroCliente> {
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Text(
-                                  'Cadastrar cliente',
+                                  'Editar cliente',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
