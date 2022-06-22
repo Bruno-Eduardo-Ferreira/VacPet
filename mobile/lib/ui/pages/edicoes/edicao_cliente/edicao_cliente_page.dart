@@ -5,7 +5,6 @@ import '../../../../../../presentation/lib/pages/edicoes/edicao_cliente/edicao_c
 import '../../consultas/consulta_cliente/consulta_cliente_page.dart';
 import '../../home/home_page.dart';
 
-
 class EdicaoCliente extends StatefulWidget {
   final String idUser;
   const EdicaoCliente({Key? key, required this.idUser}) : super(key: key);
@@ -34,11 +33,11 @@ class _EdicaoClienteState extends State<EdicaoCliente> {
 
   void dadosExistentes() {
     setState(() {
-    nome.text = presenter.nome;
-    print(presenter.nome);
-    cpf.text = presenter.cpf;
-    celular.text = presenter.celular;
-    endereco.text = presenter.endereco;
+      nome.text = presenter.nome;
+      print(presenter.nome);
+      cpf.text = presenter.cpf;
+      celular.text = presenter.celular;
+      endereco.text = presenter.endereco;
     });
   }
 
@@ -182,8 +181,11 @@ class _EdicaoClienteState extends State<EdicaoCliente> {
                                   enderecoDigitado!,
                                   widget.idUser,
                                 );
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const ConsultaCliente()));
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const ConsultaCliente()));
                               }
                             } else {
                               FocusManager.instance.primaryFocus?.unfocus();
